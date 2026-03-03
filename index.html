@@ -75,6 +75,7 @@
             font-weight: 600;
             min-height: 36px;
         }
+        .status-bar.error { color: #d04040; }
 
         /* ── Month divider ── */
         .month-header {
@@ -317,7 +318,11 @@ async function saveData() {
 }
 
 // ── Render ────────────────────────────────────────────────────────────────────
-function setStatus(msg) { document.getElementById('status').textContent = msg; }
+function setStatus(msg) {
+    const el = document.getElementById('status');
+    el.textContent = msg;
+    el.className = 'status-bar' + (msg.startsWith('Could not') ? ' error' : '');
+}
 
 function showSetupBanner() {
     setStatus('');
@@ -409,8 +414,11 @@ async function confirmSignup(key) {
     renderWeeks();
     setStatus('Saving...');
     const ok = await saveData();
-    setStatus(ok ? 'Saved!' : '');
-    if (ok) setTimeout(() => setStatus(''), 2000);
+    if (ok) {
+        setStatus('Saved!');
+        setTimeout(() => setStatus(''), 2000);
+    }
+    // if not ok, saveData already set the error message — don't clear it
 }
 
 async function removeSignup(key) {
@@ -419,8 +427,10 @@ async function removeSignup(key) {
     renderWeeks();
     setStatus('Saving...');
     const ok = await saveData();
-    setStatus(ok ? 'Saved!' : '');
-    if (ok) setTimeout(() => setStatus(''), 2000);
+    if (ok) {
+        setStatus('Saved!');
+        setTimeout(() => setStatus(''), 2000);
+    }
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
