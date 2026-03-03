@@ -291,7 +291,7 @@ async function loadData() {
     if (FIREBASE_URL === 'YOUR_FIREBASE_URL_HERE') { showSetupBanner(); return; }
     setStatus('Loading...');
     try {
-        const res  = await fetch(`${FIREBASE_URL}/signups.json`);
+        const res  = await fetch(`${FIREBASE_URL}/signups.json?_=${Date.now()}`, { cache: 'no-store' });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         signups = data || {};
@@ -303,23 +303,27 @@ async function loadData() {
 }
 
 async function saveData() {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
     try {
         const res = await fetch(`${FIREBASE_URL}/signups.json`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(signups)
+            body: JSON.stringify(signups),
+            signal: controller.signal
         });
+        clearTimeout(timeout);
         const body = await res.text();
         if (!res.ok) {
-            alert(`Save failed!\nHTTP ${res.status}\n${body}`);
-            throw new Error(`HTTP ${res.status}: ${body}`);
+            alert(`Save failed! HTTP ${res.status}\n${body}`);
+            throw new Error(`HTTP ${res.status}`);
         }
         return true;
     } catch (e) {
-        if (!e.message.startsWith('HTTP')) {
-            alert(`Save failed!\n${e.message}`);
-        }
-        setStatus(`Could not save: ${e.message}`);
+        clearTimeout(timeout);
+        const msg = e.name === 'AbortError' ? 'Request timed out — Firebase may be blocked' : `${e.name}: ${e.message}`;
+        alert(`Save failed: ${msg}`);
+        setStatus(`Could not save: ${msg}`);
         return false;
     }
 }
