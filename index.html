@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wednesday Mom Meetup</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f5f9f7;
+            background-image: radial-gradient(#c8e6d8 1.5px, transparent 1.5px);
+            background-size: 28px 28px;
+            color: #3a3a3a;
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        header {
+            background: linear-gradient(135deg, #a8d8c0 0%, #a8c8e8 100%);
+            padding: 36px 24px 28px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -30px; left: -30px;
+            width: 120px; height: 120px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 50%;
+        }
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -40px; right: -20px;
+            width: 150px; height: 150px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 50%;
+        }
+
+        .header-icons { font-size: 2.2rem; margin-bottom: 8px; letter-spacing: 4px; }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 2px 8px rgba(60,120,100,0.2);
+            letter-spacing: -0.3px;
+        }
+
+        header p {
+            color: rgba(255,255,255,0.88);
+            margin-top: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        /* ── Container ── */
+        .container {
+            max-width: 660px;
+            margin: 28px auto;
+            padding: 0 16px 56px;
+        }
+
+        .status-bar {
+            text-align: center;
+            padding: 10px;
+            color: #7aaa90;
+            font-size: 0.88rem;
+            font-weight: 600;
+            min-height: 36px;
+        }
+
+        /* ── Month divider ── */
+        .month-header {
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #7aaa90;
+            margin: 22px 0 10px 4px;
+        }
+
+        /* ── Week card ── */
+        .week-card {
+            background: white;
+            border-radius: 16px;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            border: 1.5px solid #d4ece0;
+            box-shadow: 0 2px 10px rgba(100,180,140,0.08);
+            transition: box-shadow 0.2s, transform 0.15s;
+            position: relative;
+            overflow: hidden;
+        }
+        .week-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #a8d8c0, #a8c8e8);
+            border-radius: 4px 0 0 4px;
+        }
+        .week-card:hover {
+            box-shadow: 0 4px 18px rgba(100,180,140,0.18);
+            transform: translateY(-1px);
+        }
+
+        .card-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .week-icon { font-size: 1.4rem; margin-right: 10px; flex-shrink: 0; }
+
+        .week-info-wrap { display: flex; align-items: center; flex: 1; min-width: 0; }
+
+        .week-info .date {
+            font-weight: 700;
+            font-size: 0.97rem;
+            color: #3a3a3a;
+            white-space: nowrap;
+        }
+        .week-info .time {
+            font-size: 0.8rem;
+            color: #c0a0b8;
+            margin-top: 2px;
+            font-weight: 600;
+        }
+
+        .right-side { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+        /* ── Badges ── */
+        .host-badge {
+            border-radius: 20px;
+            padding: 4px 13px;
+            font-size: 0.84rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .host-badge.taken {
+            background: #edfaf3;
+            color: #3a9e78;
+            border: 1.5px solid #b4e8cc;
+        }
+        .host-badge.open {
+            background: #eef6ff;
+            color: #5a90c8;
+            border: 1.5px solid #b8d8f4;
+        }
+
+        /* ── Buttons ── */
+        .btn {
+            border: none;
+            border-radius: 20px;
+            padding: 7px 16px;
+            font-size: 0.82rem;
+            cursor: pointer;
+            font-weight: 700;
+            font-family: 'Nunito', sans-serif;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .btn-signup  { background: linear-gradient(135deg, #a8d8c0, #a8c8e8); color: white; box-shadow: 0 2px 8px rgba(130,200,190,0.35); }
+        .btn-signup:hover  { box-shadow: 0 4px 14px rgba(130,200,190,0.45); transform: translateY(-1px); }
+        .btn-remove  { background: #f0f6f4; color: #90b8a8; }
+        .btn-remove:hover  { background: #e4eeea; }
+        .btn-confirm { background: linear-gradient(135deg, #a8d8c0, #a8c8e8); color: white; flex: 1; box-shadow: 0 2px 8px rgba(130,200,190,0.3); }
+        .btn-confirm:hover { box-shadow: 0 4px 12px rgba(130,200,190,0.45); }
+        .btn-cancel  { background: #f0f6f4; color: #90b8a8; }
+        .btn-cancel:hover  { background: #e4eeea; }
+
+        /* ── Signup panel ── */
+        .signup-panel {
+            display: none;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1.5px dashed #d4ece0;
+        }
+        .signup-panel.active { display: block; }
+
+        .signup-panel label {
+            display: block;
+            font-size: 0.8rem;
+            color: #7aaa90;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .signup-panel select {
+            width: 100%;
+            padding: 9px 14px;
+            border: 1.5px solid #c8e4d4;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 600;
+            background: #f5fbf8;
+            color: #3a3a3a;
+            margin-bottom: 10px;
+            outline: none;
+            cursor: pointer;
+        }
+        .signup-panel select:focus { border-color: #a8c8e8; }
+        .panel-actions { display: flex; gap: 8px; }
+
+        /* ── Setup banner ── */
+        .setup-banner {
+            background: #fff8e1;
+            border: 1.5px solid #ffe082;
+            border-radius: 16px;
+            padding: 18px 20px;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: #5a4a1a;
+        }
+        .setup-banner h3 { margin-bottom: 8px; color: #7a5a10; }
+        .setup-banner code {
+            background: #fff3cd;
+            padding: 1px 5px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+        .setup-banner ol { padding-left: 18px; margin-top: 8px; }
+        .setup-banner li { margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-icons">👶 🌿 🏡</div>
+    <h1>Wednesday Mom Meetup</h1>
+    <p>Every Wednesday at 11:30 AM &nbsp;·&nbsp; Sign up to host!</p>
+</header>
+
+<div class="container">
+    <div id="status" class="status-bar"></div>
+    <div id="weeks-list"></div>
+</div>
+
+<script>
+// ─── CONFIG ───────────────────────────────────────────────────────────────────
+const FIREBASE_URL = 'https://mom-group-signup-default-rtdb.firebaseio.com';
+// ─────────────────────────────────────────────────────────────────────────────
+
+const MOMS = [
+    'Ailey','Amanda','Ash','Cara','Daniella',
+    'Emily','Gabi','Maedeh','Mieka','Sarah',
+    'Selina','Tory','Victoria'
+];
+
+const END_DATE = new Date('2026-08-01');
+
+const WEEK_ICONS = ['🌿','🍼','🌈','⭐','🌻','🏡','☁️','🍭','🦋','🌱','🎈','💛','🌼'];
+
+let signups     = {};
+let openPanelKey = null;
+
+// ── Date helpers ──────────────────────────────────────────────────────────────
+function getUpcomingWednesdays() {
+    const result = [];
+    const today  = new Date();
+    today.setHours(0, 0, 0, 0);
+    const daysUntilWed = (3 - today.getDay() + 7) % 7 || 7;
+    const start = new Date(today);
+    start.setDate(today.getDate() + daysUntilWed);
+    for (let i = 0; ; i++) {
+        const d = new Date(start);
+        d.setDate(start.getDate() + i * 7);
+        if (d >= END_DATE) break;
+        result.push(d);
+    }
+    return result;
+}
+
+function dateKey(d)    { return d.toISOString().slice(0, 10); }
+function monthLabel(d) { return d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }); }
+function formatDate(d) { return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }); }
+
+// ── Firebase ──────────────────────────────────────────────────────────────────
+async function loadData() {
+    if (FIREBASE_URL === 'YOUR_FIREBASE_URL_HERE') { showSetupBanner(); return; }
+    setStatus('Loading...');
+    try {
+        const res  = await fetch(`${FIREBASE_URL}/signups.json`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        signups = data || {};
+        setStatus('');
+        renderWeeks();
+    } catch (e) {
+        setStatus(`Could not load data: ${e.message}`);
+    }
+}
+
+async function saveData() {
+    try {
+        const res = await fetch(`${FIREBASE_URL}/signups.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(signups)
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return true;
+    } catch (e) {
+        setStatus(`Could not save: ${e.message}`);
+        return false;
+    }
+}
+
+// ── Render ────────────────────────────────────────────────────────────────────
+function setStatus(msg) { document.getElementById('status').textContent = msg; }
+
+function showSetupBanner() {
+    setStatus('');
+    document.getElementById('weeks-list').innerHTML = `
+        <div class="setup-banner">
+            <h3>One-time setup needed</h3>
+            Follow these steps to connect your signup sheet:
+            <ol>
+                <li>Go to <strong>jsonbin.io</strong> and create a free account.</li>
+                <li>Click <strong>API Keys</strong> in the left menu → create a new key → copy it.</li>
+                <li>Click <strong>Bins</strong> → <strong>Create a Bin</strong>.<br>
+                    Paste this as the content: <code>{"signups":{}}</code> → Save.</li>
+                <li>Copy the Bin ID shown in the URL.</li>
+                <li>Open <strong>index.html</strong> and replace the placeholder values.</li>
+            </ol>
+        </div>`;
+}
+
+function renderWeeks() {
+    const wednesdays = getUpcomingWednesdays();
+    const list = document.getElementById('weeks-list');
+    list.innerHTML = '';
+    let currentMonth = '';
+
+    wednesdays.forEach((date, i) => {
+        const month = monthLabel(date);
+        if (month !== currentMonth) {
+            currentMonth = month;
+            const divider = document.createElement('div');
+            divider.className = 'month-header';
+            divider.textContent = month;
+            list.appendChild(divider);
+        }
+
+        const key  = dateKey(date);
+        const host = signups[key] || null;
+        const card = document.createElement('div');
+        card.className = 'week-card';
+        card.id = `card-${key}`;
+        card.innerHTML = cardHTML(key, date, host, i);
+        list.appendChild(card);
+    });
+}
+
+function cardHTML(key, date, host, i) {
+    const icon      = WEEK_ICONS[i % WEEK_ICONS.length];
+    const panelOpen = openPanelKey === key;
+    return `
+        <div class="card-row">
+            <div class="week-info-wrap">
+                <span class="week-icon">${icon}</span>
+                <div class="week-info">
+                    <div class="date">${formatDate(date)}</div>
+                    <div class="time">Wednesday · 11:30 AM</div>
+                </div>
+            </div>
+            <div class="right-side">
+                <span class="host-badge ${host ? 'taken' : 'open'}">${host || 'Open'}</span>
+                ${host
+                    ? `<button class="btn btn-remove" onclick="removeSignup('${key}')">Remove</button>`
+                    : `<button class="btn btn-signup" onclick="togglePanel('${key}')">Sign up</button>`
+                }
+            </div>
+        </div>
+        <div class="signup-panel ${panelOpen ? 'active' : ''}" id="panel-${key}">
+            <label>Who's hosting?</label>
+            <select id="select-${key}">
+                <option value="">Choose your name...</option>
+                ${MOMS.map(m => `<option value="${m}">${m}</option>`).join('')}
+            </select>
+            <div class="panel-actions">
+                <button class="btn btn-confirm" onclick="confirmSignup('${key}')">Confirm</button>
+                <button class="btn btn-cancel"  onclick="togglePanel('${key}')">Cancel</button>
+            </div>
+        </div>`;
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────────
+function togglePanel(key) {
+    openPanelKey = (openPanelKey === key) ? null : key;
+    renderWeeks();
+}
+
+async function confirmSignup(key) {
+    const sel = document.getElementById(`select-${key}`);
+    if (!sel.value) { sel.style.borderColor = '#f0a0c0'; return; }
+    signups[key] = sel.value;
+    openPanelKey = null;
+    renderWeeks();
+    setStatus('Saving...');
+    const ok = await saveData();
+    setStatus(ok ? 'Saved!' : '');
+    if (ok) setTimeout(() => setStatus(''), 2000);
+}
+
+async function removeSignup(key) {
+    if (!confirm(`Remove ${signups[key]} from this week?`)) return;
+    delete signups[key];
+    renderWeeks();
+    setStatus('Saving...');
+    const ok = await saveData();
+    setStatus(ok ? 'Saved!' : '');
+    if (ok) setTimeout(() => setStatus(''), 2000);
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+loadData();
+</script>
+</body>
+</html>
