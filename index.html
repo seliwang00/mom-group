@@ -309,9 +309,16 @@ async function saveData() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(signups)
         });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const body = await res.text();
+        if (!res.ok) {
+            alert(`Save failed!\nHTTP ${res.status}\n${body}`);
+            throw new Error(`HTTP ${res.status}: ${body}`);
+        }
         return true;
     } catch (e) {
+        if (!e.message.startsWith('HTTP')) {
+            alert(`Save failed!\n${e.message}`);
+        }
         setStatus(`Could not save: ${e.message}`);
         return false;
     }
